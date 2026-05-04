@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 30 20% 97%;
+    --foreground: 20 8% 17%;
+    --card: 0 0% 100%;
+    --card-foreground: 20 8% 17%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 8% 17%;
+    --primary: 28 60% 53%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 30 12% 90%;
+    --secondary-foreground: 20 8% 17%;
+    --muted: 30 12% 90%;
+    --muted-foreground: 24 5% 52%;
+    --accent: 28 60% 53%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 14 55% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 20 8% 17% / 0.12;
+    --input: 20 8% 17% / 0.12;
+    --ring: 28 60% 53%;
+    --radius: 0.75rem;
+    --sidebar-background: 30 14% 93%;
+    --sidebar-foreground: 20 8% 17%;
+    --sidebar-primary: 28 60% 53%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 30 14% 93%;
+    --sidebar-accent-foreground: 20 8% 17%;
+    --sidebar-border: 20 8% 17% / 0.08;
+    --sidebar-ring: 28 60% 53%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: #2D2926;
+    background-color: #F8F5F2;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Font classes */
+  .font-display {
+    font-family: 'Playfair Display', serif;
+  }
+
+  .font-mono {
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(45, 41, 38, 0.15);
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(45, 41, 38, 0.25);
+  }
+}
