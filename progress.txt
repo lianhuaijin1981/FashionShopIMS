@@ -1,0 +1,157 @@
+# FashionShopIMS 正式上线评估与修复进展报告
+# 更新日期：2026-05-07 03:46 GMT+8
+
+====================================================================
+一、评估结论
+====================================================================
+
+经全面代码审查，FashionShopIMS 项目"原型阶段"已完成度评估如下：
+
+【已完成的核心模块】✅
+  ✅ 全部 11 个页面均已实现（无 StubPage 占位）
+  ✅ Purchase 采购管理（4 个 Tab）：采购计划/采购订单/采购入库/采购退货
+  ✅ Settings 系统设置（5 个模块）：用户管理/权限管理/数据管理/操作日志/基础设置
+  ✅ 登录页面完整实现：表单校验 + 门店选择 + 账号密码验证
+  ✅ 完整 Mock 数据体系（localStorage 持久化）
+  ✅ shadcn/ui 组件库（40+ 组件）
+
+【需注意的非阻塞事项】⚠️
+  ⚠️ 数据存储：当前为 localStorage mock 数据
+         → 正式上线需接入真实后端（Node.js + PostgreSQL）
+  ⚠️ 认证体系：当前为模拟账号验证
+         → 正式上线需 JWT / Session 认证
+  ⚠️ CI/CD：GitHub Actions 需 Token 具备 `workflow` 权限方可写入
+
+====================================================================
+二、已修复项目（2026-05-07）
+====================================================================
+
+[✅] README.md 替换
+    状态：已推送至 GitHub（commit e853a57）
+    内容：
+      - 项目简介与核心功能说明
+      - 完整技术栈列表
+      - 本地运行指令
+      - 演示账号表（admin/shop01/staff01，密码 123456）
+      - 项目目录结构说明
+      - 设计系统介绍
+      - 产品路线图
+
+[⏳] GitHub Actions CI/CD
+    状态：已编写，但因 Token 缺少 `workflow` 权限无法推送
+    文件：.github/workflows/ci.yml（待推送）
+    内容：
+      - lint 任务：ESLint + TypeScript 类型检查
+      - build 任务：生产构建（需 lint 通过）
+      - deploy 任务：自动部署至 GitHub Pages（仅 master 分支）
+    解决方案：请在 GitHub Token 设置中为 Token 添加 `workflow` 权限，
+              然后将以下内容创建为仓库文件：
+              路径：.github/workflows/ci.yml
+              （内容见下方「CI/CD 文件内容」）
+
+====================================================================
+三、CI/CD 文件内容（如 Token 有 workflow 权限可直接创建）
+====================================================================
+
+文件路径：.github/workflows/ci.yml
+
+```
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  lint:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run lint
+      - run: npx tsc --noEmit
+
+  build:
+    name: Build Production
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build
+        env:
+          NODE_ENV: production
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7
+
+  deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/master'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/
+      - id: deployment
+        uses: actions/deploy-pages@v4
+```
+
+====================================================================
+四、后续建议（正式上线前）
+====================================================================
+
+P0 必须：
+  [ ] 接入真实后端服务（Node.js/Express 或 NestJS）
+  [ ] 接入真实数据库（PostgreSQL/MySQL）
+  [ ] 实现 JWT 用户认证体系
+
+P1 重要：
+  [ ] 添加 workflow 权限 Token，推送 CI/CD 流水线
+  [ ] 在 GitHub Settings → Pages → Source 设为 GitHub Actions
+  [ ] 多门店数据隔离（当前为全局数据）
+  [ ] 敏感信息（数据库密码、API Key）移入 .env
+
+P2 优化：
+  [ ] POS 小票打印机对接
+  [ ] 数据导出 Excel/PDF
+  [ ] 微信通知/短信通知集成
+
+====================================================================
+五、GitHub 提交记录
+====================================================================
+
+commit e853a57 — docs: 替换 README.md 为真实项目文档
+commit 5e61a26 — feat: 服装行业门店进销存系统 v1.0 - 完整功能实现
+
+====================================================================
