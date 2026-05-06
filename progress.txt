@@ -37,17 +37,13 @@
       - 设计系统介绍
       - 产品路线图
 
-[⏳] GitHub Actions CI/CD
-    状态：已编写，但因 Token 缺少 `workflow` 权限无法推送
-    文件：.github/workflows/ci.yml（待推送）
+[✅] GitHub Actions CI/CD
+    状态：已推送至 GitHub（commit f0856b6）✅
+    文件：.github/workflows/ci.yml
     内容：
       - lint 任务：ESLint + TypeScript 类型检查
       - build 任务：生产构建（需 lint 通过）
       - deploy 任务：自动部署至 GitHub Pages（仅 master 分支）
-    解决方案：请在 GitHub Token 设置中为 Token 添加 `workflow` 权限，
-              然后将以下内容创建为仓库文件：
-              路径：.github/workflows/ci.yml
-              （内容见下方「CI/CD 文件内容」）
 
 ====================================================================
 三、CI/CD 文件内容（如 Token 有 workflow 权限可直接创建）
@@ -151,7 +147,11 @@ P2 优化：
 五、GitHub 提交记录
 ====================================================================
 
+commit f0856b6 — ci: 添加 GitHub Actions CI/CD 流水线（lint + build + deploy）
+commit 8ef002f — docs: 添加 progress.txt 上线评估与修复进展报告
 commit e853a57 — docs: 替换 README.md 为真实项目文档
 commit 5e61a26 — feat: 服装行业门店进销存系统 v1.0 - 完整功能实现
+
+✅ 全部修复已完成，所有内容已推送至 GitHub
 
 ====================================================================
